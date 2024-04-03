@@ -72,7 +72,7 @@ const Signup = () => {
               />
             </div>
             <div className="my-10 ml-5">
-              <button className="w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black">
+              <button className="w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black" disabled={loading}>
                 {loading ? (
                   <span className="loading loading-spinner"></span>
                 ) : (

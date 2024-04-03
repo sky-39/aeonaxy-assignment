@@ -10,6 +10,8 @@ const Signup = () => {
     password: "",
   });
 
+  const [termAccepted, setTermAccepted] = useState(false);
+
   const { loading, signup } = useSignup();
 
   const handleSubmit = async (e) => {
@@ -112,6 +114,8 @@ const Signup = () => {
                 type="checkbox"
                 name="conditionCheck"
                 className="w-10 h-10 border-gray-300 rounded mr-4"
+                value={termAccepted}
+                onChange={(e) => setTermAccepted(e.target.checked)}
               />
               <p className="text-slate-500 mt-4">
                 Creating an account means you are okay with our
@@ -139,7 +143,8 @@ const Signup = () => {
             </div>
             <div className="my-10 ml-5">
               <button
-                className={`w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black`}
+                className={`w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black disabled:opacity-45 disabled:cursor-not-allowed`}
+                disabled={loading || !termAccepted}
               >
                 {loading ? (
                   <span className="loading loading-spinner"></span>
