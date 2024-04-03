@@ -1,6 +1,7 @@
 import generateTokenAndSetCookie from "../utils/generateToken.js";
 import User from "./../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { sendVerificationMail } from "../emailVerification/sendVerificationMail.js";
 
 export const signup = async (req, res) => {
   try {
@@ -25,22 +26,41 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
     });
+
     if (newUser) {
       generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
+
+      await sendVerificationMail(newUser.fullName, newUser.email, newUser._id);
+
       return res.status(201).json({
         _id: newUser._id,
         fullName: newUser.fullName,
         username: newUser.username,
         email: newUser.email,
         profile: newUser.profilePic,
-        location: newUser.location
+        location: newUser.location,
+        is_verified: newUser.is_verified,
       });
     } else {
       res.status(400).json("Invalid user data");
     }
   } catch (error) {
     console.log("Error in signup controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const updatedUser = await User.updateOne(
+      { _id: id },
+      { $set: { is_verified: true } }
+    );
+    res.status(201).json({ updatedUser });
+  } catch (error) {
+    console.log("Error in  verifing email", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -66,7 +86,8 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         profilePic: user.profilePic,
-        location: user.location
+        location: user.location,
+        is_verified: user.is_verified,
       });
     }
   } catch (err) {

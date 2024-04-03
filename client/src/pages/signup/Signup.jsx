@@ -1,6 +1,22 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import useSignup from "../../hooks/useSignup";
 
 const Signup = () => {
+  const [inputs, setInputs] = useState({
+    fullName: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const { loading, signup } = useSignup();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signup(inputs);
+  };
+
   return (
     <div className="flex flex-row h-screen w-screen justify-stretch">
       <div className="flex flex-col w-1/3 bg-black pl-6 pr-2 font-bold">
@@ -36,7 +52,7 @@ const Signup = () => {
           <p className="font-bold text-3xl ml-5 mt-14 text-center">
             Sign Up to Dribble
           </p>
-          <form className="self-center">
+          <form className="self-center" onSubmit={handleSubmit}>
             <div className="flex flex-row my-8">
               <div className="flex flex-col mx-5">
                 <label className="font-bold">Name</label>
@@ -45,6 +61,10 @@ const Signup = () => {
                   name="fullName"
                   placeholder="John Doe"
                   className="bg-slate-200 h-8 w-44 rounded-md pl-3 placeholder-black placeholder-opacity-50"
+                  value={inputs.fullName}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, fullName: e.target.value })
+                  }
                 />
               </div>
               <div className="flex flex-col mx-3">
@@ -54,6 +74,10 @@ const Signup = () => {
                   name="username"
                   placeholder="JohnDoe"
                   className="bg-slate-200 h-8 w-44 rounded-md pl-3 placeholder-black placeholder-opacity-50"
+                  value={inputs.username}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, username: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -64,6 +88,10 @@ const Signup = () => {
                 name="email"
                 placeholder="test@example.com"
                 className="bg-slate-200 h-8 w-96 rounded-md pl-3 placeholder-black placeholder-opacity-50"
+                value={inputs.email}
+                onChange={(e) =>
+                  setInputs({ ...inputs, email: e.target.value })
+                }
               />
             </div>
             <div className="flex flex-col ml-5 my-8">
@@ -73,6 +101,10 @@ const Signup = () => {
                 name="password"
                 placeholder="Password"
                 className="bg-slate-200 h-8 w-96 rounded-md pl-3 placeholder-black placeholder-opacity-50"
+                value={inputs.password}
+                onChange={(e) =>
+                  setInputs({ ...inputs, password: e.target.value })
+                }
               />
             </div>
             <div className="flex flex-row w-96 ml-5 text-sm my-8">
@@ -106,8 +138,14 @@ const Signup = () => {
               </p>
             </div>
             <div className="my-10 ml-5">
-              <button className="w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black">
-                Create Account
+              <button
+                className={`w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black`}
+              >
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Create Account"
+                )}
               </button>
               <p className="w-72 text-xs mt-8 leading-4">
                 This site is protected by reCAPTCHA and the Google{" "}

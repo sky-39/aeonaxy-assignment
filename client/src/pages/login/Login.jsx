@@ -1,6 +1,18 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import useLogin from "../../hooks/useLogin";
 
 const Signup = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { loading, login } = useLogin();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await login(username, password);
+  };
+
   return (
     <div className="flex flex-row h-screen w-screen justify-stretch">
       <div className="flex flex-col w-1/3 bg-black pl-6 pr-2 font-bold">
@@ -36,7 +48,7 @@ const Signup = () => {
           <p className="font-bold text-3xl ml-5 mt-14 text-center">
             Sign In to Dribble
           </p>
-          <form className="self-center">
+          <form className="self-center" onSubmit={handleSubmit}>
             <div className="flex flex-col ml-5 my-8">
               <label className="font-bold">Username</label>
               <input
@@ -44,6 +56,8 @@ const Signup = () => {
                 name="username"
                 placeholder="JohnDoe"
                 className="bg-slate-200 h-8 w-96 rounded-md pl-3 placeholder-black placeholder-opacity-50"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="flex flex-col ml-5 my-8">
@@ -53,11 +67,17 @@ const Signup = () => {
                 name="password"
                 placeholder="Password"
                 className="bg-slate-200 h-8 w-96 rounded-md pl-3 placeholder-black placeholder-opacity-50"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div className="my-10 ml-5">
               <button className="w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black">
-                Sign In
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Sign In"
+                )}
               </button>
               <p className="w-72 text-xs mt-8 leading-4">
                 This site is protected by reCAPTCHA and the Google{" "}
