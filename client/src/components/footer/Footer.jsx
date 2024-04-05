@@ -8,7 +8,7 @@ import {
 
 const Footer = () => {
   return (
-    <div className="flex flex-row justify-between pt-6 px-16 font-light bg-gray-100 mt-auto">
+    <div className="flex flex-row justify-between pt-6 px-16 font-light bg-gray-100 mt-40">
       <div className="w-3/12">
         <p
           style={{

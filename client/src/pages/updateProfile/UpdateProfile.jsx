@@ -1,14 +1,37 @@
 import { useState } from "react";
 import { MdCameraEnhance } from "react-icons/md";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import useUpdate from "../../hooks/useUpdate";
+import { useAuthContext } from "../../context/AuthContext";
 
 const UpdateProfile = () => {
-  const [file, setFile] = useState();
+  const [file, setFile] = useState("");
+  const [location, setLocation] = useState("");
+  const { updateLocation } = useUpdate();
+  const { authUser } = useAuthContext();
 
   function handleChange(e) {
     setFile(URL.createObjectURL(e.target.files[0]));
   }
 
-  console.log(file);
+  const handleSubmit = async () => {
+    if (location === "" && file === "") {
+      toast.error("Invalid Input");
+    } else if (location != "") {
+      updateLocation(location, authUser._id);
+    }
+  };
+
+  const handleKeyDown = async (e) => {
+    if (e.keyCode === 13) {
+      if (location === "" && file === "") {
+        toast.error("Invalid Input");
+      } else if (location != "") {
+        updateLocation(location, authUser._id);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -62,13 +85,28 @@ const UpdateProfile = () => {
         type="text"
         placeholder="Enter a location"
         className="ml-96 mt-8 border-b border-gray-400 outline-0 text-lg pb-2 w-2/5 placeholder:text-gray-400 text-black font-medium"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
-      <button className="w-48 h-10 ml-96 mt-12 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black">
-        Proceed
-      </button>
-      <span className="ml-96 text-xs font-bold text-gray-400 cursor-default w-48 h-10 flex justify-center items-center">
-        or Press RETURN
-      </span>
+      <div className="flex flex-row mt-12 ml-96">
+        <div>
+          <button
+            className="w-48 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black"
+            onClick={handleSubmit}
+          >
+            Proceed
+          </button>
+          <span className="text-xs font-bold text-gray-500 cursor-default w-48 h-10 flex justify-center items-center">
+            or Press RETURN
+          </span>
+        </div>
+        <div className="ml-12">
+          <Link to="/roleSelect">
+            <button className="w-36 h-10 rounded-lg text-gray-400">Skip</button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

@@ -105,3 +105,54 @@ export const logout = (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const resendVerificationMail = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const user = await User.findOne({ _id: id });
+
+    const email = user.email;
+    const name = user.fullName;
+
+    await sendVerificationMail(name, email, id);
+    return res
+      .status(200)
+      .json({ message: "Verification mail sent successfully" });
+  } catch (error) {
+    console.log("Error in resend controller.. ", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const roleSelect = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const data = req.body;
+    const updatedData = Object.values(data);
+
+    const updated = await User.updateOne(
+      { _id: id },
+      { $set: { whyOnDribble: updatedData } }
+    );
+    res.status(200).json({ message: "Role updated", updated: updated });
+  } catch (error) {
+    console.log("Error in Role updation controller..", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const updateLocation = async (req, res) => {
+  try {
+    const id = req.query.id;  
+    const {location} = req.body;
+    const updated = await User.updateOne({_id : id}, { $set: {location : location}})
+
+    if(updated.modifiedCount===0){
+      return  res.status(500).json("Location could not be updated");
+    }
+    res.status(200).json({ message: "Location updated successfully"});
+  } catch (error) {
+    console.log("Error in update profile controller..", error.message); 
+    res.status(500).json({error: "Internal server error"});
+  }
+};

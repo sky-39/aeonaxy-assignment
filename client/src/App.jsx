@@ -18,10 +18,10 @@ function App() {
         />
         <Route
           path="/signup"
-          element={authUser ? <Navigate to="/" /> : <Signup />}
+          element={authUser ? <Navigate to="/updateProfile" /> : <Signup />}
         />
-        <Route path="/updateProfile" element={<UpdateProfile />} />
-        <Route path="/roleSelect" element={<RoleSelect />} />
+        <Route path="/updateProfile" element={authUser ? <UpdateProfile /> : <Login />} />
+        <Route path="/roleSelect" element={authUser ? <RoleSelect /> : <Login />}/>
         <Route path="/" element={authUser ? <Home /> : <Navigate to="/login" />} />
       </Routes>
       <Toaster />

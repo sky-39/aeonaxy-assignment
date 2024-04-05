@@ -18,7 +18,7 @@ export const sendVerificationMail = async (name, email, user_id) => {
         to: email,
         subject: "Aeonaxy Dribble: Verification Email",
         html:
-          "<p>Welcome" +
+          "<p>Welcome " +
           name +
           'Click on given link to verify your email address <br> <a href="http://localhost:8000/api/auth/verify?id=' +
           user_id +
@@ -31,7 +31,7 @@ export const sendVerificationMail = async (name, email, user_id) => {
             err.message
           );
         } else {
-          console.log("Email has been sent to new user", info.response);
+          console.log("Email has been sent to user", info.response);
         }
       });
     } catch (error) {

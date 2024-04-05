@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
       type: "boolean",
       default: false,
     },
+    whyOnDribble: {
+      type: [Object],
+      default: [],
+    }
   },
   { timestamps: true }
 );

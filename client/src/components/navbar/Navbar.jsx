@@ -3,6 +3,7 @@ import { IoIosSearch } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import { useState } from "react";
 import useLogout from "../../hooks/useLogout";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [hiddenOrNot, setHiddenOrNot] = useState(true);
@@ -69,9 +70,9 @@ const Navbar = () => {
               <a href="#" className="text-gray-700 block px-4 py-2 text-sm">
                 View Profile
               </a>
-              <a href="#" className="text-gray-700 block px-4 py-2 text-sm">
+              <Link to="/updateProfile" className="text-gray-700 block px-4 py-2 text-sm">
                 Update Profile
-              </a>
+              </Link>
             </div>
             <div className="py-1" role="none">
               <button
