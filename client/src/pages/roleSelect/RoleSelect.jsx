@@ -3,11 +3,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import useRoleSelect from "../../hooks/useRoleSelect";
 import { useAuthContext } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 const RoleSelect = () => {
   const [borderClass1, setBorderClass1] = useState("border border-gray-200");
   const [borderClass2, setBorderClass2] = useState("border border-gray-200");
   const [borderClass3, setBorderClass3] = useState("border border-gray-200");
+
+  const [roleSelected, setRoleSelected] = useState(false);
+
   const [roles, setRoles] = useState({
     lookingToShare: false,
     lookingToHire: false,
@@ -17,26 +21,47 @@ const RoleSelect = () => {
   function handleChange(event) {
     if (event.target.name === "lookingToShare") {
       setRoles({ ...roles, lookingToShare: event.target.checked });
-      if (event.target.checked === true)
+      if (event.target.checked === true) {
         setBorderClass1("border-2 border-pink-500");
-      else setBorderClass1("border border-gray-200");
+        setRoleSelected(true);
+      } else {
+        setBorderClass1("border border-gray-200");
+        setRoleSelected(false);
+      }
     } else if (event.target.name === "lookingToHire") {
-      setRoles({ ...roles, lookingToHire: true });
-      if (event.target.checked === true)
+      setRoles({ ...roles, lookingToHire: event.target.checked });
+      if (event.target.checked === true) {
         setBorderClass2("border-2 border-pink-500");
-      else setBorderClass2("border border-gray-200");
+        setRoleSelected(true);
+      } else {
+        setBorderClass2("border border-gray-200");
+        setRoleSelected(false);
+      }
     } else {
-      setRoles({ ...roles, lookingForInspiration: true });
-      if (event.target.checked === true)
+      setRoles({ ...roles, lookingForInspiration: event.target.checked });
+      if (event.target.checked === true) {
         setBorderClass3("border-2 border-pink-500");
-      else setBorderClass3("border border-gray-200");
+        setRoleSelected(true);
+      } else {
+        setBorderClass3("border border-gray-200");
+        setRoleSelected(false);
+      }
     }
   }
 
   const { selectRole } = useRoleSelect();
   const { authUser } = useAuthContext();
+
   function handleSubmit() {
-    selectRole(roles, authUser._id);
+    if (
+      roles["lookingToHire"] === false &&
+      roles["lookingToShare"] === false &&
+      roles["lookingForInspiration"] === false
+    ) {
+      toast.error("Select at least one role");
+    } else {
+      selectRole(roles, authUser._id);
+    }
   }
 
   return (
@@ -116,8 +141,9 @@ const RoleSelect = () => {
         <div>
           <Link to="/">
             <button
-              className="w-56 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black"
+              className="w-56 h-10 bg-pink-500 rounded-lg text-white shadow-sm hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSubmit}
+              disabled={!roleSelected}
             >
               Finish
             </button>
