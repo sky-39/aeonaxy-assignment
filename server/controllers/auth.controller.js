@@ -3,6 +3,7 @@ import User from "./../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { sendVerificationMail } from "../emailVerification/sendVerificationMail.js";
 
+
 export const signup = async (req, res) => {
   try {
     const { fullName, username, email, password } = req.body;
@@ -148,7 +149,7 @@ export const updateLocation = async (req, res) => {
     const updated = await User.updateOne({_id : id}, { $set: {location : location}})
 
     if(updated.modifiedCount===0){
-      return  res.status(500).json("Location could not be updated");
+      return  res.status(500).json({error:"Location could not be updated"});
     }
     res.status(200).json({ message: "Location updated successfully"});
   } catch (error) {
@@ -156,3 +157,22 @@ export const updateLocation = async (req, res) => {
     res.status(500).json({error: "Internal server error"});
   }
 };
+
+
+export const uploadProfilePic = async (req, res) => {
+  try {
+    const {secure_url} = req.body;
+    const id = req.query.id;
+    const updated = await User.updateOne({_id : id}, {$set: {profilePic: secure_url}})
+
+    if(updated.modifiedCount===0) {
+      return res.status(500).json({error:"Profile Picture could not be updated"});
+    }
+
+    res.status(200).json({message : "Profile Picture updated successfully"})
+
+  } catch (error) {
+    console.log("Error in upload profile pic controller", error.message);
+    res.status(500).json({error: "Internal server error"});
+  }
+}

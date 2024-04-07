@@ -6,29 +6,37 @@ import useUpdate from "../../hooks/useUpdate";
 import { useAuthContext } from "../../context/AuthContext";
 
 const UpdateProfile = () => {
-  const [file, setFile] = useState("");
+  const [imageToView, setImageToView] = useState(null);
+  const [imageToUpload, setImageToUpload] = useState('');
   const [location, setLocation] = useState("");
-  const { updateLocation } = useUpdate();
+  const { updateLocation, updateProfilePic } = useUpdate();
   const { authUser } = useAuthContext();
 
   function handleChange(e) {
-    setFile(URL.createObjectURL(e.target.files[0]));
+    setImageToView(URL.createObjectURL(e.target.files[0]));
+    setImageToUpload(e.target.files[0]);
   }
 
-  const handleSubmit = async () => {
-    if (location === "" && file === "") {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (location === "" && imageToUpload === "") {
       toast.error("Invalid Input");
     } else if (location != "") {
-      updateLocation(location, authUser._id);
+      await updateLocation(location, authUser._id);
+    } else {
+      await updateProfilePic(imageToUpload, authUser._id);
     }
   };
 
   const handleKeyDown = async (e) => {
+    e.preventDefault();
     if (e.keyCode === 13) {
-      if (location === "" && file === "") {
+      if (location === "" && imageToUpload === "") {
         toast.error("Invalid Input");
       } else if (location != "") {
-        updateLocation(location, authUser._id);
+        await updateLocation(location, authUser._id);
+      } else {
+        await updateProfilePic(imageToUpload, authUser._id);
       }
     }
   };
@@ -57,7 +65,7 @@ const UpdateProfile = () => {
           <MdCameraEnhance />
           <img
             className="w-44 h-44 absolute flex justify-center items-center rounded-full border-dashed"
-            src={file}
+            src={imageToView}
           />
         </div>
         <div className="flex flex-col ml-6">

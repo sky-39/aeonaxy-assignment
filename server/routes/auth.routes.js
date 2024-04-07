@@ -6,7 +6,8 @@ import {
   verifyEmail,
   resendVerificationMail,
   roleSelect,
-  updateLocation
+  updateLocation,
+  uploadProfilePic
 } from "../controllers/auth.controller.js";
 
 
@@ -25,5 +26,7 @@ router.post("/resendVerification", resendVerificationMail);
 router.post('/roleSelect', roleSelect);
 
 router.post('/updateLocation', updateLocation);
+
+router.post('/uploadProfilePic', uploadProfilePic);
 
 export default router;
